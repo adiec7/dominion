@@ -56,7 +56,7 @@ const page = () => {
     <div className=' h-screen w-full flex bg-neutral-50'>
     <div className=' p-8 md:p-20 w-full md:w-[60%] md:flex md:flex-col md:items-center'>
       <p className=' uppercase font-semibold'>
-        step 2 of 2
+        step 1 of 1
       </p>
 
       <div className=' w-full bg-slate-200 rounded-2xl h-3 mt-5'>
@@ -67,13 +67,13 @@ const page = () => {
 
       <div className=' mt-10 w-full'>
         <div className=' flex flex-col signup-form gap-5 mt-5'>
-          <input type="text" placeholder='Group Name' name='groupName' onChange={handleChange} />
-          <input type="text" placeholder="Group leader's name" name='groupLeaderName' onChange={handleChange} />
-          <input type="tel"  placeholder="Group leaders's phone" name='groupLeaderContact' onChange={handleChange} />
+          <input type="text" placeholder='Name' name='name' onChange={handleChange} />
+          <input type="tel" placeholder="Phone" name='phone' onChange={handleChange} />
+          <input type="text"  placeholder="Accomodation Type" name='accomodationType' onChange={handleChange} />
         </div>
 
         <div className=' flex mt-10 gap-5 '>
-          <Link href={'/register'} className='purple-btn '>
+          <Link href={'/'} className='purple-btn '>
             Back
           </Link>
           <p onClick={handleSubmit} className=' black-btn'>

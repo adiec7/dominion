@@ -25,9 +25,9 @@ const Hero = () => {
                 <Link href={'/register'} className='act-btn'>
                     REGISTER
                 </Link>
-                <p className='act-btn'>
+                <Link href={'/register/accomodation'} className='act-btn'>
                     ACCOMODATION
-                </p>
+                </Link>
             </div>
         </div>
     </div>
