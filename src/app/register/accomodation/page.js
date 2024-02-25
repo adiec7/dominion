@@ -8,6 +8,18 @@ import { useState } from 'react';
 
 const page = () => {
 
+  const options = [
+    "CEC Pastor",
+    "State Pastor", 
+    "Provincial Pastor", 
+    "Chapter Pastor", 
+    "Pastor", 
+    "Leading Lady", 
+    "Member", 
+    "Guest"
+];
+
+
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -69,7 +81,14 @@ const page = () => {
         <div className=' flex flex-col signup-form gap-5 mt-5'>
           <input type="text" placeholder='Name' name='name' onChange={handleChange} />
           <input type="tel" placeholder="Phone" name='phone' onChange={handleChange} />
-          <input type="text"  placeholder="Accomodation Type" name='accomodationType' onChange={handleChange} />
+          <select>
+    {options.map((option, index) => (
+        <option key={index} value={option} onChange={handleChange}>
+            {option}
+        </option>
+    ))}
+</select>
+
         </div>
 
         <div className=' flex mt-10 gap-5 '>
@@ -86,7 +105,7 @@ const page = () => {
 
 
     <div className=' hidden md:flex'>
-      <Image src={'/assets/onboard/hbd.jpg'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
+      <Image src={'/assets/onboard/domi.png'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
     </div>
 
   </div>

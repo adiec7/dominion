@@ -42,7 +42,7 @@ const page = () => {
 
 
     <div className=' hidden md:flex'>
-      <Image src={'/assets/onboard/hbd.jpg'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
+      <Image src={'/assets/onboard/domi.png'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
     </div>
 
   </div>
