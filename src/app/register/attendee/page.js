@@ -1,149 +1,169 @@
-'use client'
-import axios from 'axios';
-import Image from 'next/image'
-import Link from 'next/link';
-import React from 'react'
-import { useState } from 'react';
+'use client';
 
+import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useState } from 'react';
 
 const page = () => {
-
   const options = [
     "CEC Pastor",
-    "State Pastor", 
-    "Provincial Pastor", 
-    "Chapter Pastor", 
-    "Pastor", 
-    "Leading Lady", 
-    "Member", 
+    "State Pastor",
+    "Provincial Pastor",
+    "Chapter Pastor",
+    "Pastor",
+    "Leading Lady",
+    "Member",
     "Guest"
-];
+  ];
 
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    category: '',
+    errors: { // Track errors directly within formData
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: ''
+    }
+  });
 
-    const [formData, setFormData] = useState({
-        firstname: '',
-        lastname: '',
-        email: '',
-        phone: '',
-        category: ''
-      });
-    
-      const [errors, setErrors] = useState({
-        firstname: '',
-        lastname: '',
-        email: '',
-        phone: ''
-      });
-    
-      const validateEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
-      };
-    
-      const validatePhone = (phone) => {
-        return /^\d{11}$/.test(phone);
-      };
-    
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-          ...formData,
-          [name]: value
-        });
-        setErrors({
-          ...errors,
-          [name]: value.length < 3 ? `${name} must be at least 3 characters long` : ''
-        });
-    
-        if (name === 'email') {
-          setErrors({
-            ...errors,
-            email: !validateEmail(value) ? 'Email must be a valid email address' : ''
-          });
-        }
-    
-        if (name === 'phone') {
-          setErrors({
-            ...errors,
-            phone: !validatePhone(value) ? 'Phone must be 11 characters long' : ''
-          });
-        }
-      };
+  const validateForm = () => {
+    const newErrors = {};
 
-      const data = {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        email: formData.email,
-        phone: formData.phone,
-        category: formData.category
+    if (formData.firstname.length < 3) {
+      newErrors.firstname = 'Firstname must be at least 3 characters long';
+    }
+
+    if (formData.lastname.length < 3) {
+      newErrors.lastname = 'Lastname must be at least 3 characters long';
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email must be a valid email address';
+    }
+
+    if (!/^\d{11}$/.test(formData.phone)) {
+      newErrors.phone = 'Phone must be 11 digits long';
+    }
+
+    return newErrors;
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = validateForm(); 
+    setFormData({ ...formData, errors }); // Update errors in state
+
+    if (Object.values(errors).every((error) => error === '')) {
+      try {
+        const data = { ...formData }; // Send the entire formData
+        delete data.errors; // Remove errors before sending
+        const res = await axios.post(`https://dcaccomapi.onrender.com/attendee`, data);
+        console.log(res.data);
+
+      } catch (err) {
+        console.error('Form submission error:', err);
       }
-    
-      const handleSubmit = async(e) => {
-        e.preventDefault();
-        // Check if there are no errors
-        if (Object.values(errors).every((error) => error === '')) {
-          // Form submission logic
-          // console.log(formData);
+    } else {
+      console.log('Form has errors');
+    }
+  };
 
-          const res = await axios.post(`https://dcaccomapi.onrender.com/attendee`, data)
-
-          console.log(res.data)
-
-        } else {
-          // Display error messages
-          console.log('Form has errors');
-        }
-      };
   return (
     <div className=' h-screen w-full flex bg-neutral-50'>
-    <div className=' p-8 md:p-20 w-full md:w-[60%] md:flex md:flex-col md:items-center'>
-      <p className=' uppercase font-semibold'>
-        step 2 of 2
-      </p>
+  <div className=' p-8 md:p-20 w-full md:w-[60%] md:flex md:flex-col md:items-center'>
+    <p className=' uppercase font-semibold'>step 2 of 2</p>
 
-      <div className=' w-full bg-slate-200 rounded-2xl h-3 mt-5'>
-        <div className=' w-full h-full bg-sky-500 rounded-2xl'>
+    <div className=' w-full bg-slate-200 rounded-2xl h-3 mt-5'>
+      <div className=' w-full h-full bg-sky-500 rounded-2xl'></div>
+    </div>
 
+    <div className=' mt-10 w-full'>
+      <form onSubmit={handleSubmit} className='signup-form flex gap-5 flex-col'> 
+        <div> 
+          <input 
+            type="text" 
+            name="firstname" 
+            id="" 
+            value={formData.firstname} 
+            placeholder='Firstname' 
+            onChange={handleChange} 
+          />
+          {formData.errors.firstname && <p className='text-red-500 text-xs mt-1'>{formData.errors.firstname}</p>} 
         </div>
-      </div>
-
-      <div className=' mt-10 w-full'>
-        <div className='signup-form flex gap-5 flex-col'>
-          <input type="text" name="firstname" id="" value={formData.firstname} placeholder='Firstname' onChange={handleChange} />
-          <input type="text" name="lastname" id="" value={formData.lastname} placeholder="Lastname" onChange={handleChange} />
+        <div>
+          <input 
+            type="text" 
+            name="lastname" 
+            id="" 
+            value={formData.lastname} 
+            placeholder="Lastname" 
+            onChange={handleChange} 
+          />
+          {formData.errors.lastname && <p className='text-red-500 text-xs mt-1'>{formData.errors.lastname}</p>} 
         </div>
+
         <div className=' flex flex-col signup-form gap-5 mt-5'>
-          <input type="text" placeholder='Email' value={formData.email} name='email' onChange={handleChange} />
-          <input type="tel"  placeholder="Phone" value={formData.phone} name='phone' onChange={handleChange} />
-          {/* <label className=' -mb-4 text-neutral-500 text-sm px-3' htmlFor="dob">Select Category</label> */}
-          <select>
-    {options.map((option, index) => (
-        <option key={index} value={option}>
-            {option}
-        </option>
-    ))}
-</select>
+          <div>
+            <input 
+              type="text" 
+              placeholder='Email' 
+              value={formData.email} 
+              name='email' 
+              onChange={handleChange} 
+            />
+            {formData.errors.email && <p className='text-red-500 text-xs mt-1'>{formData.errors.email}</p>} 
+          </div>
+          <div>
+            <input 
+              type="tel"  
+              placeholder="Phone" 
+              value={formData.phone} 
+              name='phone' 
+              onChange={handleChange} 
+            />
+            {formData.errors.phone && <p className='text-red-500 text-xs mt-1'>{formData.errors.phone}</p>} 
+          </div>
 
+          <select>
+              {options.map((option, index) => (
+                  <option key={index} value={option}>
+                      {option}
+                  </option>
+              ))}
+          </select>
         </div>
 
         <div className=' flex mt-10 gap-5 '>
           <Link href={'/register'} className='purple-btn '>
             Back
           </Link>
-          <p onClick={handleSubmit} className=' black-btn'>
+          <button type='submit' className='black-btn'> 
             Register
-          </p>
+          </button>
         </div>
-      </div>
+      </form>
     </div>
-
-
-
-    <div className=' hidden md:flex'>
-      <Image src={'/assets/onboard/domi.png'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
-    </div>
-
   </div>
-  )
-}
 
-export default page
+  <div className=' hidden md:flex'>
+    <Image src={'/assets/onboard/domi.png'} alt='' width={500} height={100} className=' h-screen w-full object-cover' />
+  </div>
+</div>
+
+  );
+};
+
+export default page;
